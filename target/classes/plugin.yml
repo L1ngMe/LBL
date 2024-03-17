@@ -1,0 +1,4 @@
+name: LBL
+version: '0.0.1'
+main: org.ling.lbl.LBL
+api-version: '1.20'

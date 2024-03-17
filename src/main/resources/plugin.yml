@@ -1,0 +1,4 @@
+name: LBL
+version: '${project.version}'
+main: org.ling.lbl.LBL
+api-version: '1.20'
