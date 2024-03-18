@@ -8,6 +8,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.ling.lbl.LBL;
 import org.ling.lbl.bh.BlackHoleHandler;
+import org.ling.lbl.bh.Opening;
 import org.ling.lbl.bh.api.BlackHole;
 
 import java.sql.SQLException;
@@ -92,7 +93,8 @@ public class LBLCommand extends AbstractCommands {
                                 blackHole.setQuality(quality);
                                 blackHole.build();
 
-                                new BlackHoleHandler().spawnBlackHole();
+                                Opening opening = new Opening();
+                                opening.start();
 
                                 sender.sendMessage(ChatColor.GREEN + "Black hole created successfully.");
                         } catch (NumberFormatException e) {

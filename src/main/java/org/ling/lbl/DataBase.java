@@ -139,4 +139,22 @@ public class DataBase {
                 }
                 return names;
         }
+
+
+        public void deleteBlackHole(String name) throws SQLException {
+                String query = "DELETE FROM " + tableName + " WHERE name = ?";
+                try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+                        preparedStatement.setString(1, name);
+                        preparedStatement.executeUpdate();
+                }
+        }
+
+        public void updateRadius(String name, double newRadius) throws SQLException {
+                String query = "UPDATE " + tableName + " SET radius = ? WHERE name = ?";
+                try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+                        preparedStatement.setDouble(1, newRadius);
+                        preparedStatement.setString(2, name);
+                        preparedStatement.executeUpdate();
+                }
+        }
 }

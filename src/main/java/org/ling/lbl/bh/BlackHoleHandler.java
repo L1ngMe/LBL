@@ -210,9 +210,9 @@ public class BlackHoleHandler {
                                         throw new RuntimeException(e);
                                 }
                         }
-                }.runTaskTimer(LBL.getInstance(), 0, 6);
+                }.runTaskTimer(LBL.getInstance(), 0, 2);
         }
-        public Block findNearestBlock(Location location, double radius) {
+        private Block findNearestBlock(Location location, double radius) {
                 World world = location.getWorld();
                 int centerX = location.getBlockX();
                 int centerY = location.getBlockY();
