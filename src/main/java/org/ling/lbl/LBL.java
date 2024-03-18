@@ -1,6 +1,7 @@
 package org.ling.lbl;
 
 import org.bukkit.plugin.java.JavaPlugin;
+import org.ling.lbl.commands.LBLCommand;
 
 import java.sql.SQLException;
 
@@ -8,9 +9,11 @@ public final class LBL extends JavaPlugin {
 
     private DataBase dataBase;
 
+    public DataBase getDataBase() {
+        return dataBase;
+    }
 
-
-    public LBL getInstance() {
+    public static LBL getInstance() {
         return getPlugin(LBL.class);
     }
 
@@ -24,6 +27,8 @@ public final class LBL extends JavaPlugin {
                 throw new RuntimeException(e);
             }
         }
+
+        new LBLCommand();
     }
 
     @Override

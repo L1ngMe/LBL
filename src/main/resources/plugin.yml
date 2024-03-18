@@ -2,3 +2,31 @@ name: LBL
 version: '${project.version}'
 main: org.ling.lbl.LBL
 api-version: '1.20'
+
+commands:
+        lbl:
+                description: "Основная команда"
+                aliases: [lingblackhole, blackhole, bh]
+                children:
+                        reload:
+                                description: "Перезагрузить плагин"
+                                permission: "lbl.reload"
+                        create:
+                                description: "Создание диры"
+                                permission: "lbl.create"
+
+permissions:
+        lbl.reload:
+                description: "Разрешение на перезагрузку плагина"
+                default: op
+
+        lbl.create:
+                description: "Разрешение на создание диры"
+                default: op
+
+        lbl.*:
+                description: "Разрешение на перезагрузку плагина"
+                default: op
+                children:
+                        lbl.reload: true
+                        lbl.create: true

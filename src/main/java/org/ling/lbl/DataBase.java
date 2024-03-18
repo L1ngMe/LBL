@@ -2,6 +2,7 @@ package org.ling.lbl;
 
 import org.bukkit.Location;
 import org.bukkit.Particle;
+import org.bukkit.World;
 
 import java.sql.*;
 
@@ -21,7 +22,10 @@ public class DataBase {
                             "name TEXT PRIMARY KEY, " +
                             "radius TEXT NOT NULL, " +
                             "particle TEXT NOT NULL, " +
-                            "location TEXT NOT NULL" +
+                            "x DOUBLE, " +
+                            "y DOUBLE, " +
+                            "z DOUBLE, " +
+                            "world TEXT NOT NULL" +
                             ")");
                 }
         }
@@ -32,16 +36,33 @@ public class DataBase {
                 }
         }
 
-        public void saveApplication(String name, Double radius, Particle particle, Location location) throws SQLException {
-                String query = "INSERT INTO " + tableName + "(name, radius, particle, location) VALUES (?, ?, ?, ?)";
+        public void saveApplication(String name, double blackHoleRadius, Particle particle, double x, double y, double z, World world) throws SQLException {
+                String query = "INSERT INTO " + tableName + "(name, radius, particle, x, y, z, world) VALUES (?, ?, ?, ?, ?, ?, ?)";
 
                 try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
                         preparedStatement.setString(1, name);
-                        preparedStatement.setString(1, String.valueOf(radius));
-                        preparedStatement.setString(1, String.valueOf(particle));
-                        preparedStatement.setString(1, String.valueOf(location));
+                        preparedStatement.setDouble(2, blackHoleRadius);
+                        preparedStatement.setString(3, particle.toString());
+                        preparedStatement.setDouble(4, x);
+                        preparedStatement.setDouble(5, y);
+                        preparedStatement.setDouble(6, z);
+                        preparedStatement.setString(7, world.getUID().toString());
                         preparedStatement.executeUpdate();
                 }
+        }
+
+        public boolean isBlackHoleNameTaken(String name) throws SQLException {
+                String query = "SELECT COUNT(*) FROM " + tableName + " WHERE name = ?";
+                try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+                        preparedStatement.setString(1, name);
+                        try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                                if (resultSet.next()) {
+                                        int count = resultSet.getInt(1);
+                                        return count > 0;
+                                }
+                        }
+                }
+                return false;
         }
 
     /*private String getApplicationField(String applicationId, String fieldName) throws SQLException {
