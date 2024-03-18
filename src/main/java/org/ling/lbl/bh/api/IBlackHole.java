@@ -1,4 +1,4 @@
-package org.ling.lbl.bh;
+package org.ling.lbl.bh.api;
 
 import org.bukkit.Location;
 import org.bukkit.Particle;
@@ -13,6 +13,7 @@ public interface IBlackHole {
     void setRadius(double radius);
 
     void setParticle(Particle particle);
+    void setQuality(int quality);
 
     void setX(double x);
     void setY(double y);

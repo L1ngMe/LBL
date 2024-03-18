@@ -1,6 +1,5 @@
-package org.ling.lbl.bh;
+package org.ling.lbl.bh.api;
 
-import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.World;
 import org.ling.lbl.DataBase;
@@ -12,6 +11,7 @@ public class BlackHole implements IBlackHole {
 
         private String name;
         private double radius;
+        private int quality;
         private Particle particle;
         private double x;
         private double y;
@@ -19,11 +19,7 @@ public class BlackHole implements IBlackHole {
         private World world;
 
         @Override
-        public void setName(String name) throws SQLException {
-                DataBase dataBase = LBL.getInstance().getDataBase();
-                if (dataBase.isBlackHoleNameTaken(name)) {
-                        throw new IllegalStateException("Black hole with name \"" + name + "\" already exists");
-                }
+        public void setName(String name) {
                 this.name = name;
         }
 
@@ -36,6 +32,12 @@ public class BlackHole implements IBlackHole {
         public void setParticle(Particle particle) {
                 this.particle = particle;
         }
+
+        @Override
+        public void setQuality(int quality) {
+                this.quality = quality;
+        }
+
 
         @Override
         public void setX(double x) {
@@ -75,12 +77,15 @@ public class BlackHole implements IBlackHole {
                 if (world == null) {
                         throw new IllegalStateException("\"world\" is null");
                 }
+                if (quality == 0) {
+                        throw new IllegalStateException("\"quality\" cannot be <= 0");
+                }
         }
 
         private void saveToDatabase() {
                 try {
                         DataBase dataBase = LBL.getInstance().getDataBase();
-                        dataBase.saveApplication(name, radius, particle, x, y, z, world);
+                        dataBase.saveApplication(name, radius, particle, x, y, z, world, quality);
                 } catch (SQLException e) {
                         throw new RuntimeException("Failed to save black hole to database", e);
                 }

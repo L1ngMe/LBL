@@ -7,7 +7,8 @@ import org.bukkit.Particle;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.ling.lbl.LBL;
-import org.ling.lbl.bh.BlackHole;
+import org.ling.lbl.bh.BlackHoleHandler;
+import org.ling.lbl.bh.api.BlackHole;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -26,7 +27,7 @@ public class LBLCommand extends AbstractCommands {
 
         @Override
         public void execute(CommandSender sender, String label, String[] args) {
-                if (args.length == 0 || !(sender instanceof Player)) {
+                if (!(sender instanceof Player) || args.length == 0) {
                         sender.sendMessage(ERROR_REPLY);
                         return;
                 }
@@ -41,6 +42,7 @@ public class LBLCommand extends AbstractCommands {
 
                         LBL.getInstance().reloadConfig();
                         Bukkit.getScheduler().cancelTasks(LBL.getInstance());
+                        new BlackHoleHandler().spawnBlackHole();
 
                         sender.sendMessage(ChatColor.GREEN + LBL.getInstance().getConfig().getString("messages.reload"));
                 } else if (args[0].equalsIgnoreCase("create")) {
@@ -49,41 +51,55 @@ public class LBLCommand extends AbstractCommands {
                                 return;
                         }
 
-                        if (args.length < 5) {
-                                sender.sendMessage(ChatColor.RED + "Usage: /lbl create <name> <x> <y> <z> <radius>");
+                        if (args.length < 8) {
+                                sender.sendMessage(ChatColor.RED + "Usage: /lbl create <name> <x> <y> <z> <radius> <particle> <quality>");
                                 return;
                         }
 
-                        String name = args[1];
-                        double x, y, z, radius;
-
                         try {
-                                x = args[2].equals("~") ? player.getLocation().getBlockX() : Double.parseDouble(args[2]);
-                                y = args[3].equals("~") ? player.getLocation().getBlockY() : Double.parseDouble(args[3]);
-                                z = args[4].equals("~") ? player.getLocation().getBlockZ() : Double.parseDouble(args[4]);
-                                radius = Double.parseDouble(args[5]);
-                        } catch (NumberFormatException e) {
-                                sender.sendMessage(ChatColor.RED + "Invalid coordinates or radius.");
-                                return;
-                        }
+                                String name = args[1];
+                                double x = args[2].equals("~") ? player.getLocation().getBlockX() : Double.parseDouble(args[2]);
+                                double y = args[3].equals("~") ? player.getLocation().getBlockY() : Double.parseDouble(args[3]);
+                                double z = args[4].equals("~") ? player.getLocation().getBlockZ() : Double.parseDouble(args[4]);
+                                double radius = Double.parseDouble(args[5]);
+                                Particle particle = Particle.valueOf(args[6].toUpperCase());
+                                int quality = Integer.parseInt(args[7]);
 
-                        BlackHole blackHole = new BlackHole();
-                        try {
+                                if (quality <= 0) {
+                                        sender.sendMessage(ChatColor.RED + "Quality must be greater than 0.");
+                                        return;
+                                }
+
+                                try {
+                                        String existingName = LBL.getInstance().getDataBase().getName(name);
+                                        if (existingName != null && existingName.equals(name)) {
+                                                sender.sendMessage(ChatColor.RED + "A black hole with the name \"" + name + "\" already exists.");
+                                                return;
+                                        }
+                                } catch (SQLException e) {
+                                        sender.sendMessage(ChatColor.RED + "An error occurred while checking the database.");
+                                        return;
+                                }
+
+                                BlackHole blackHole = new BlackHole();
                                 blackHole.setName(name);
-                        } catch (SQLException e) {
-                                sender.sendMessage(ChatColor.RED + "A black hole with this name already exists.");
-                                return;
+                                blackHole.setX(x);
+                                blackHole.setY(y);
+                                blackHole.setZ(z);
+                                blackHole.setParticle(particle);
+                                blackHole.setRadius(radius);
+                                blackHole.setWorld(player.getWorld());
+                                blackHole.setQuality(quality);
+                                blackHole.build();
+
+                                new BlackHoleHandler().spawnBlackHole();
+
+                                sender.sendMessage(ChatColor.GREEN + "Black hole created successfully.");
+                        } catch (NumberFormatException e) {
+                                sender.sendMessage(ChatColor.RED + "Invalid number format.");
+                        } catch (IllegalArgumentException e) {
+                                sender.sendMessage(ChatColor.RED + "Invalid particle type.");
                         }
-
-                        blackHole.setX(x);
-                        blackHole.setY(y);
-                        blackHole.setZ(z);
-                        blackHole.setParticle(Particle.BUBBLE_POP);
-                        blackHole.setRadius(radius);
-                        blackHole.setWorld(player.getWorld());
-                        blackHole.build();
-
-                        sender.sendMessage(ChatColor.GREEN + "Black hole created successfully.");
                 } else {
                         sender.sendMessage(ERROR_REPLY);
                 }
@@ -114,6 +130,14 @@ public class LBLCommand extends AbstractCommands {
                                         break;
                                 case 6:
                                         completions.add("<radius>");
+                                        break;
+                                case 7:
+                                        for (Particle particle : Particle.values()) {
+                                                completions.add(particle.toString());
+                                        }
+                                        break;
+                                case 8:
+                                        completions.add("<quality>");
                                         break;
                         }
                 }
