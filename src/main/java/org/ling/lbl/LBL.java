@@ -34,9 +34,12 @@ public final class LBL extends JavaPlugin {
         new LBLCommand();
         BlackHoleHandler blackHoleHandler = new BlackHoleHandler();
         BlackHoleHandler.createCOSIN();
+        /*blackHoleHandler.transformBlocks();
+        blackHoleHandler.spawnBlackHole();
+        blackHoleHandler.killEntity();
+        blackHoleHandler.attractEntity();*/
 
-        Opening opening = new Opening();
-        opening.opening();
+
 
 
     }

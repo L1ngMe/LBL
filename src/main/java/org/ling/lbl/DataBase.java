@@ -149,10 +149,10 @@ public class DataBase {
                 }
         }
 
-        public void updateRadius(String name, double newRadius) throws SQLException {
+        public void updateRadius(String name, double plusRadius) throws SQLException {
                 String query = "UPDATE " + tableName + " SET radius = ? WHERE name = ?";
                 try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-                        preparedStatement.setDouble(1, newRadius);
+                        preparedStatement.setDouble(1, plusRadius + getRadius(name));
                         preparedStatement.setString(2, name);
                         preparedStatement.executeUpdate();
                 }

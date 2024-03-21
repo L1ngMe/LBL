@@ -94,7 +94,7 @@ public class LBLCommand extends AbstractCommands {
                                 blackHole.build();
 
                                 Opening opening = new Opening();
-                                opening.start();
+                                opening.runOpening();
 
                                 sender.sendMessage(ChatColor.GREEN + "Black hole created successfully.");
                         } catch (NumberFormatException e) {
