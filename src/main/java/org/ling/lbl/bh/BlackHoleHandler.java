@@ -196,7 +196,7 @@ public class BlackHoleHandler {
                                                 Location location = LBL.getInstance().getDataBase().getLocation(name);
                                                 double radius = LBL.getInstance().getDataBase().getRadius(name);
 
-                                                Block block = findNearestBlock(location, 40);
+                                                Block block = findNearestBlock(location, config.getInt("blackHole.attractSettings.radius.block"));
                                                 if (block != null && (block.getType() != Material.AIR)) {
 
                                                         FallingBlock fallingBlock = block.getWorld().spawnFallingBlock(block.getLocation(), block.getBlockData());
