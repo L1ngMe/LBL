@@ -1,4 +1,49 @@
-messages:
-        reload: "[LBL] Успешная перезагрузка плагина!"
+blackHole:
+        # Настройка всасивания
+        attractSettings:
+                coolDown: 4
+                power:
+                        player: 0.1
+                        block: 0.1
+                        otherEntity: 0.1
+                radius:
+                        player: 40
+                        block: 40
+                        otherEntity: 40
 
-        create: ""
+        # настройка задержки между спавном партиклов дыри
+        spawnCoolDown: 4
+
+# Настройки начальной анимации перед спавном дыри
+opening:
+        # Настройка той части анимации что отвечает за выброс частиц в точке
+        startSetting:
+                # сколько времени оно будет работать
+                time: 600
+                # Количество партиклов
+                particleCount: 7
+                # Задрежка спавна
+                coolDown: 4
+
+        # Сколько нужно времени между вспышкой и взрывом/спавном дыри
+        betweenTime: 100
+
+        # Время жизни дыри
+        runTime: 2700
+
+        # Уровень взрыва
+        boomLvl: 50
+
+        # настрйоки роста дыри
+        growSettings:
+                # Сколько будет добавляться к радиусу
+                plus: 0.01
+                # Задержка между ростом
+                coolDown: 10
+
+        # настройка музики
+        soundSettings:
+                sound: "MUSIC_GAME"
+                soundCategory: "AMBIENT"
+                volume: 1
+                pitch: 0

@@ -19,4 +19,6 @@ public interface IBlackHole {
     void setY(double y);
     void setZ(double z);
     void setWorld(World world);
+
+    // Это я просто игрался с интерфейсом и смотрел как он работает, не обращайте внимания
 }

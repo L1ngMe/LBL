@@ -45,7 +45,7 @@ public class LBLCommand extends AbstractCommands {
                         Bukkit.getScheduler().cancelTasks(LBL.getInstance());
                         new BlackHoleHandler().spawnBlackHole();
 
-                        sender.sendMessage(ChatColor.GREEN + LBL.getInstance().getConfig().getString("messages.reload"));
+                        sender.sendMessage(ChatColor.GREEN + "Успешная перезагрузка!");
                 } else if (args[0].equalsIgnoreCase("create")) {
                         if (!player.hasPermission(CREATE_PERMISSION)) {
                                 sender.sendMessage(ERROR_REPLY);

@@ -2,6 +2,7 @@ package org.ling.lbl.bh;
 
 import org.bukkit.*;
 import org.bukkit.block.Block;
+import org.bukkit.configuration.Configuration;
 import org.bukkit.entity.*;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -22,6 +23,8 @@ public class BlackHoleHandler {
         private static final double[] COSj = new double[360];
         private static boolean hasCOSIN = false;
 
+        private Configuration config = LBL.getInstance().getConfig();
+
         public static void createCOSIN() {
                 Thread thread = new Thread(() -> {
                         for (int i = 0; i <= 180; i++) {
@@ -36,7 +39,6 @@ public class BlackHoleHandler {
                 });
                 thread.start();
         }
-
         public void spawnBlackHole() {
                 new BukkitRunnable() {
                         @Override
@@ -77,7 +79,7 @@ public class BlackHoleHandler {
                                         e.printStackTrace();
                                 }
                         }
-                }.runTaskTimer(LBL.getInstance(), 0, 4);
+                }.runTaskTimer(LBL.getInstance(), 0, config.getInt("blackHole.spawnCoolDown"));
         }
 
         public void attractEntity() {
@@ -92,25 +94,20 @@ public class BlackHoleHandler {
 
 
                                                 for (Entity entity : Objects.requireNonNull(location.getWorld()).getEntities()) {
-                                                        if (entity.getLocation().distanceSquared(location) <= 40 * 40) {
 
-                                                                if (entity instanceof Player && entity.getLocation().distanceSquared(location) <= 40 * 40) {
-                                                                        Player player = (Player) entity;
-                                                                        if (player.getGameMode().equals(GameMode.SPECTATOR))
-                                                                                continue;
-                                                                        if (player.getGameMode().equals(GameMode.CREATIVE))
-                                                                                continue;
-                                                                }
+                                                        if (entity instanceof Player && entity.getLocation().distanceSquared(location) <= config.getInt("blackHole.attractSettings.radius.player") * config.getInt("blackHole.attractSettings.radius.player")) {
+                                                                Player player = (Player) entity;
+                                                                if (player.getGameMode().equals(GameMode.SPECTATOR))
+                                                                        continue;
+                                                                if (player.getGameMode().equals(GameMode.CREATIVE))
+                                                                        continue;
+                                                                attract(entity, location, config.getInt("blackHole.attractSettings.power.player"));
 
-                                                                Location loc1 = entity.getLocation();
+                                                        } else if (entity instanceof FallingBlock && entity.getLocation().distanceSquared(location) <= config.getInt("blackHole.attractSettings.radius.block") * config.getInt("blackHole.attractSettings.radius.block")) {
+                                                                attract(entity, location, config.getInt("blackHole.attractSettings.power.block"));
 
-                                                                Vector vec1 = loc1.toVector();
-                                                                Vector vec2 = location.toVector();
-
-
-                                                                Vector move = vec2.subtract(vec1).multiply(0.1);
-
-                                                                entity.setVelocity(move);
+                                                        } else if (entity.getLocation().distanceSquared(location) <= config.getInt("blackHole.attractSettings.radius.otherEntity") * config.getInt("blackHole.attractSettings.radius.otherEntity")) {
+                                                                attract(entity, location, config.getInt("blackHole.attractSettings.power.otherEntity"));
                                                         }
                                                 }
                                         }
@@ -120,7 +117,15 @@ public class BlackHoleHandler {
                                 }
                         }
 
-                }.runTaskTimer(LBL.getInstance(), 0, 2);
+                }.runTaskTimer(LBL.getInstance(), 0, config.getInt("blackHole.attractSettings.coolDown"));
+        }
+
+        private void attract(Entity entity, Location location, double multiply) {
+                Location loc1 = entity.getLocation();
+                Vector vec1 = loc1.toVector();
+                Vector vec2 = location.toVector();
+                Vector move = vec2.subtract(vec1).multiply(multiply);
+                entity.setVelocity(move);
         }
 
         public void killEntity() {
