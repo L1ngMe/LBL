@@ -1,7 +1,7 @@
 blackHole:
         # Настройка всасивания
         attractSettings:
-                coolDown: 4
+                coolDown: 10
                 power:
                         player: 0.1
                         block: 0.1

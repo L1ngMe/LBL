@@ -59,6 +59,7 @@ public class Opening {
                                                 blackHoleHandler.killEntity();
                                                 blackHoleHandler.attractEntity();
 
+
                                                 ArmorStand armorStand = plugin.getServer().getWorld(location.getWorld().getUID()).spawn(location, ArmorStand.class);
                                                 armorStand.setVisible(false);
                                                 armorStand.setGravity(false);

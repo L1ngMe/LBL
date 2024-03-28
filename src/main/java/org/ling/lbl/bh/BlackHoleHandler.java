@@ -95,19 +95,19 @@ public class BlackHoleHandler {
 
                                                 for (Entity entity : Objects.requireNonNull(location.getWorld()).getEntities()) {
 
-                                                        if (entity instanceof Player && entity.getLocation().distanceSquared(location) <= config.getInt("blackHole.attractSettings.radius.player") * config.getInt("blackHole.attractSettings.radius.player")) {
+                                                        if (entity instanceof Player && entity.getLocation().distanceSquared(location) <= config.getDouble("blackHole.attractSettings.radius.player") * config.getDouble("blackHole.attractSettings.radius.player")) {
                                                                 Player player = (Player) entity;
                                                                 if (player.getGameMode().equals(GameMode.SPECTATOR))
                                                                         continue;
                                                                 if (player.getGameMode().equals(GameMode.CREATIVE))
                                                                         continue;
-                                                                attract(entity, location, config.getInt("blackHole.attractSettings.power.player"));
+                                                                attract(entity, location, config.getDouble("blackHole.attractSettings.power.player"));
 
-                                                        } else if (entity instanceof FallingBlock && entity.getLocation().distanceSquared(location) <= config.getInt("blackHole.attractSettings.radius.block") * config.getInt("blackHole.attractSettings.radius.block")) {
-                                                                attract(entity, location, config.getInt("blackHole.attractSettings.power.block"));
+                                                        } else if (entity instanceof FallingBlock && entity.getLocation().distanceSquared(location) <= config.getDouble("blackHole.attractSettings.radius.block") * config.getDouble("blackHole.attractSettings.radius.block")) {
+                                                                attract(entity, location, config.getDouble("blackHole.attractSettings.power.block"));
 
-                                                        } else if (entity.getLocation().distanceSquared(location) <= config.getInt("blackHole.attractSettings.radius.otherEntity") * config.getInt("blackHole.attractSettings.radius.otherEntity")) {
-                                                                attract(entity, location, config.getInt("blackHole.attractSettings.power.otherEntity"));
+                                                        } else if (entity.getLocation().distanceSquared(location) <= config.getDouble("blackHole.attractSettings.radius.otherEntity") * config.getDouble("blackHole.attractSettings.radius.otherEntity")) {
+                                                                attract(entity, location, config.getDouble("blackHole.attractSettings.power.otherEntity"));
                                                         }
                                                 }
                                         }
@@ -196,7 +196,7 @@ public class BlackHoleHandler {
                                                 Location location = LBL.getInstance().getDataBase().getLocation(name);
                                                 double radius = LBL.getInstance().getDataBase().getRadius(name);
 
-                                                Block block = findNearestBlock(location, config.getInt("blackHole.attractSettings.radius.block"));
+                                                Block block = findNearestBlock(location, config.getDouble("blackHole.attractSettings.radius.block"));
                                                 if (block != null && (block.getType() != Material.AIR)) {
 
                                                         FallingBlock fallingBlock = block.getWorld().spawnFallingBlock(block.getLocation(), block.getBlockData());
